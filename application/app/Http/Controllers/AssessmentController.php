@@ -13,14 +13,14 @@ class AssessmentController extends Controller
     ) {
     }
 
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        return response()->json($this->service->getAllAssessments());
+        return response()->json($this->service->getAllAssessments((int) $request->query('per_page', 20)));
     }
 
     public function show(string $id): JsonResponse
     {
-        return response()->json($this->service->getAssessment($id));
+        return response()->json($this->service->getAssessmentById($id));
     }
 
     public function store(Request $request): JsonResponse

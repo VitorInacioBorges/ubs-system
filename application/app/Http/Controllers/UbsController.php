@@ -2,47 +2,47 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\ReportService;
+use App\Services\UbsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class ReportController extends Controller
+class UbsController extends Controller
 {
     public function __construct(
-        protected ReportService $service,
+        protected UbsService $service,
     ) {
     }
 
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        return response()->json($this->service->getAllReports());
+        return response()->json($this->service->getAllUbs((int) $request->query('per_page', 20)));
     }
 
     public function show(string $id): JsonResponse
     {
-        return response()->json($this->service->getReport($id));
+        return response()->json($this->service->getUbsById($id));
     }
 
     public function store(Request $request): JsonResponse
     {
-        return response()->json($this->service->createReport($request->all()), 201);
+        return response()->json($this->service->createUbs($request->all()), 201);
     }
 
     public function update(Request $request, string $id): JsonResponse
     {
-        return response()->json($this->service->updateReport($id, $request->all()));
+        return response()->json($this->service->updateUbs($id, $request->all()));
     }
 
     public function destroy(string $id): JsonResponse
     {
-        $this->service->deleteReport($id);
+        $this->service->deleteUbs($id);
 
         return response()->json(null, 204);
     }
 
     public function deleteSelf(string $id): JsonResponse
     {
-        $this->service->deleteReport($id);
+        $this->service->deleteUbs($id);
 
         return response()->json(null, 204);
     }

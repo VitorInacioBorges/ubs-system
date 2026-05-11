@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\RiskModel;
 use App\Repositories\RiskRepository;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class RiskService
@@ -13,14 +14,14 @@ class RiskService
     ) {
     }
 
-    public function getAllRisks()
+    public function getAllRisks(int $perPage): LengthAwarePaginator
     {
-        return $this->repository->findAllRisks();
+        return $this->repository->paginateRisks($this->normalizePerPage($perPage));
     }
 
-    public function getRisk(string $id): RiskModel
+    public function getRiskById(string $id): RiskModel
     {
-        $risk = $this->repository->findRisk($id);
+        $risk = $this->repository->findRiskById($id);
 
         if ($risk === null) {
             throw (new ModelNotFoundException())->setModel(RiskModel::class, [$id]);
@@ -42,26 +43,25 @@ class RiskService
      */
     public function updateRisk(string $id, array $data): RiskModel
     {
-        $this->getRiskOrFail($id);
+        $risk = $this->getRiskById($id);
+        $risk->fill($data);
+        $risk->save();
 
-        $risk = $this->repository->updateRisk($id, $data);
-
-        if ($risk === null) {
-            throw (new ModelNotFoundException())->setModel(RiskModel::class, [$id]);
-        }
-
-        return $risk;
+        return $risk->refresh();
     }
 
     public function deleteRisk(string $id): bool
     {
-        $risk = $this->getRiskOrFail($id);
-
-        return $this->repository->deleteRiskInstance($risk);
+        return (bool) $this->getRiskById($id)->delete();
     }
 
     public function deleteRiskInstance(RiskModel $risk): bool
     {
-        return $this->repository->deleteRiskInstance($risk);
+        return (bool) $risk->delete();
+    }
+
+    private function normalizePerPage(int $perPage): int
+    {
+        return max(1, min(20, $perPage));
     }
 }

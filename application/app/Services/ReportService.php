@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\ReportModel;
 use App\Repositories\ReportRepository;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ReportService
@@ -13,14 +14,14 @@ class ReportService
     ) {
     }
 
-    public function getAllReports()
+    public function getAllReports(int $perPage): LengthAwarePaginator
     {
-        return $this->repository->findAllReports();
+        return $this->repository->paginateReports($this->normalizePerPage($perPage));
     }
 
-    public function getReport(string $id): ReportModel
+    public function getReportById(string $id): ReportModel
     {
-        $report = $this->repository->findReport($id);
+        $report = $this->repository->findReportById($id);
 
         if ($report === null) {
             throw (new ModelNotFoundException())->setModel(ReportModel::class, [$id]);
@@ -42,26 +43,25 @@ class ReportService
      */
     public function updateReport(string $id, array $data): ReportModel
     {
-        $this->getReportOrFail($id);
+        $report = $this->getReportById($id);
+        $report->fill($data);
+        $report->save();
 
-        $report = $this->repository->updateReport($id, $data);
-
-        if ($report === null) {
-            throw (new ModelNotFoundException())->setModel(ReportModel::class, [$id]);
-        }
-
-        return $report;
+        return $report->refresh();
     }
 
     public function deleteReport(string $id): bool
     {
-        $report = $this->getReportOrFail($id);
-
-        return $this->repository->deleteReportInstance($report);
+        return (bool) $this->getReportById($id)->delete();
     }
 
     public function deleteReportInstance(ReportModel $report): bool
     {
-        return $this->repository->deleteReportInstance($report);
+        return (bool) $report->delete();
+    }
+
+    private function normalizePerPage(int $perPage): int
+    {
+        return max(1, min(20, $perPage));
     }
 }

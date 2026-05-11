@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\PatientModel;
 use App\Repositories\PatientRepository;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class PatientService
@@ -13,14 +14,14 @@ class PatientService
     ) {
     }
 
-    public function getAllPatients()
+    public function getAllPatients(int $perPage): LengthAwarePaginator
     {
-        return $this->repository->findAllPatients();
+        return $this->repository->paginatePatients($this->normalizePerPage($perPage));
     }
 
-    public function getPatient(string $id): PatientModel
+    public function getPatientById(string $id): PatientModel
     {
-        $patient = $this->repository->findPatient($id);
+        $patient = $this->repository->findPatientById($id);
 
         if ($patient === null) {
             throw (new ModelNotFoundException())->setModel(PatientModel::class, [$id]);
@@ -42,26 +43,25 @@ class PatientService
      */
     public function updatePatient(string $id, array $data): PatientModel
     {
-        $this->getPatientOrFail($id);
+        $patient = $this->getPatientById($id);
+        $patient->fill($data);
+        $patient->save();
 
-        $patient = $this->repository->updatePatient($id, $data);
-
-        if ($patient === null) {
-            throw (new ModelNotFoundException())->setModel(PatientModel::class, [$id]);
-        }
-
-        return $patient;
+        return $patient->refresh();
     }
 
     public function deletePatient(string $id): bool
     {
-        $patient = $this->getPatientOrFail($id);
-
-        return $this->repository->deletePatientInstance($patient);
+        return (bool) $this->getPatientById($id)->delete();
     }
 
     public function deletePatientInstance(PatientModel $patient): bool
     {
-        return $this->repository->deletePatientInstance($patient);
+        return (bool) $patient->delete();
+    }
+
+    private function normalizePerPage(int $perPage): int
+    {
+        return max(1, min(20, $perPage));
     }
 }

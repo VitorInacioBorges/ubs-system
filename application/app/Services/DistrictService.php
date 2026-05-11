@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\DistrictModel;
 use App\Repositories\DistrictRepository;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class DistrictService
@@ -13,14 +14,14 @@ class DistrictService
     ) {
     }
 
-    public function getAllDistricts()
+    public function getAllDistricts(int $perPage): LengthAwarePaginator
     {
-        return $this->repository->findAllDistricts();
+        return $this->repository->paginateDistricts($this->normalizePerPage($perPage));
     }
 
-    public function getDistrict(string $id): DistrictModel
+    public function getDistrictById(string $id): DistrictModel
     {
-        $district = $this->repository->findDistrict($id);
+        $district = $this->repository->findDistrictById($id);
 
         if ($district === null) {
             throw (new ModelNotFoundException())->setModel(DistrictModel::class, [$id]);
@@ -42,26 +43,25 @@ class DistrictService
      */
     public function updateDistrict(string $id, array $data): DistrictModel
     {
-        $this->getDistrictOrFail($id);
+        $district = $this->getDistrictById($id);
+        $district->fill($data);
+        $district->save();
 
-        $district = $this->repository->updateDistrict($id, $data);
-
-        if ($district === null) {
-            throw (new ModelNotFoundException())->setModel(DistrictModel::class, [$id]);
-        }
-
-        return $district;
+        return $district->refresh();
     }
 
     public function deleteDistrict(string $id): bool
     {
-        $district = $this->getDistrictOrFail($id);
-
-        return $this->repository->deleteDistrictInstance($district);
+        return (bool) $this->getDistrictById($id)->delete();
     }
 
     public function deleteDistrictInstance(DistrictModel $district): bool
     {
-        return $this->repository->deleteDistrictInstance($district);
+        return (bool) $district->delete();
+    }
+
+    private function normalizePerPage(int $perPage): int
+    {
+        return max(1, min(20, $perPage));
     }
 }

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\AssessmentModel;
 use App\Repositories\AssessmentRepository;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class AssessmentService
@@ -13,14 +14,14 @@ class AssessmentService
     ) {
     }
 
-    public function getAllAssessments()
+    public function getAllAssessments(int $perPage): LengthAwarePaginator
     {
-        return $this->repository->findAllAssessments();
+        return $this->repository->paginateAssessments($this->normalizePerPage($perPage));
     }
 
-    public function getAssessment(string $id): AssessmentModel
+    public function getAssessmentById(string $id): AssessmentModel
     {
-        $assessment = $this->repository->findAssessment($id);
+        $assessment = $this->repository->findAssessmentById($id);
 
         if ($assessment === null) {
             throw (new ModelNotFoundException())->setModel(AssessmentModel::class, [$id]);
@@ -42,26 +43,25 @@ class AssessmentService
      */
     public function updateAssessment(string $id, array $data): AssessmentModel
     {
-        $this->getAssessmentOrFail($id);
+        $assessment = $this->getAssessmentById($id);
+        $assessment->fill($data);
+        $assessment->save();
 
-        $assessment = $this->repository->updateAssessment($id, $data);
-
-        if ($assessment === null) {
-            throw (new ModelNotFoundException())->setModel(AssessmentModel::class, [$id]);
-        }
-
-        return $assessment;
+        return $assessment->refresh();
     }
 
     public function deleteAssessment(string $id): bool
     {
-        $assessment = $this->getAssessmentOrFail($id);
-
-        return $this->repository->deleteAssessmentInstance($assessment);
+        return (bool) $this->getAssessmentById($id)->delete();
     }
 
     public function deleteAssessmentInstance(AssessmentModel $assessment): bool
     {
-        return $this->repository->deleteAssessmentInstance($assessment);
+        return (bool) $assessment->delete();
+    }
+
+    private function normalizePerPage(int $perPage): int
+    {
+        return max(1, min(20, $perPage));
     }
 }

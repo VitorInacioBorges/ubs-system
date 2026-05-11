@@ -2,47 +2,47 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\UbsService;
+use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class UbsController extends Controller
+class UserController extends Controller
 {
     public function __construct(
-        protected UbsService $service,
+        protected UserService $service,
     ) {
     }
 
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        return response()->json($this->service->getAllUbs());
+        return response()->json($this->service->getAllUsers((int) $request->query('per_page', 20)));
     }
 
     public function show(string $id): JsonResponse
     {
-        return response()->json($this->service->getUbs($id));
+        return response()->json($this->service->getUserById($id));
     }
 
     public function store(Request $request): JsonResponse
     {
-        return response()->json($this->service->createUbs($request->all()), 201);
+        return response()->json($this->service->createUser($request->all()), 201);
     }
 
     public function update(Request $request, string $id): JsonResponse
     {
-        return response()->json($this->service->updateUbs($id, $request->all()));
+        return response()->json($this->service->updateUser($id, $request->all()));
     }
 
     public function destroy(string $id): JsonResponse
     {
-        $this->service->deleteUbs($id);
+        $this->service->deleteUser($id);
 
         return response()->json(null, 204);
     }
 
     public function deleteSelf(string $id): JsonResponse
     {
-        $this->service->deleteUbs($id);
+        $this->service->deleteUser($id);
 
         return response()->json(null, 204);
     }
