@@ -1,5 +1,7 @@
 <?php
 
+// Representa o model, e a tabela por conseguinte, da tabela DISTRITO (distrito de cada UBS) 
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
