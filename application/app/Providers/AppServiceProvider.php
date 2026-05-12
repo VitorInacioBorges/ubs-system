@@ -19,6 +19,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Registra que as migrations dentro de ./migrations/* devem ser rodadas
+
+        $mainPath = database_path('migrations');
+        $directories = glob($mainPath . '/*', GLOB_ONLYDIR);
+
+        $this->loadMigrationsFrom(array_merge([$mainPath], $directories));
     }
 }
