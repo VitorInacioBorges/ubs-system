@@ -1,6 +1,6 @@
 # Projeto Glicodata 🇧🇷 / 🇵🇹
 
-[Português](#projeto-ubs-system--glicodata-) 🇧🇷 / 🇵🇹 | [English](#ubs-system--glicodata-project-) 🇺🇸 / 🇬🇧 / 🇨🇦 / 🇦🇺
+[Português](#projeto-glicodata-portuguese) 🇧🇷 / 🇵🇹 | [English](#projeto-glicodata-english) 🇺🇸 / 🇬🇧 / 🇨🇦 / 🇦🇺
 
 Sistema Laravel para apoiar o cadastro e a organizacao de dados de UBS, usuarios, pacientes, avaliacoes, riscos e relatorios relacionados ao acompanhamento de risco de Diabetes Mellitus II.
 
@@ -57,7 +57,7 @@ ubs-system/
 
 # Glicodata Project 🇺🇸 / 🇬🇧 / 🇨🇦 / 🇦🇺
 
-[Português](#projeto-ubs-system--glicodata-) 🇧🇷 / 🇵🇹 | [English](#ubs-system--glicodata-project-) 🇺🇸 / 🇬🇧 / 🇨🇦 / 🇦🇺
+[Português](#projeto-glicodata-portuguese) 🇧🇷 / 🇵🇹 | [English](#projeto-glicodata-english) 🇺🇸 / 🇬🇧 / 🇨🇦 / 🇦🇺
 
 Laravel system to support UBS unit, user, patient, assessment, risk, and report data related to Diabetes Mellitus II risk tracking.
 
