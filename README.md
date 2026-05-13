@@ -1,4 +1,4 @@
-# Projeto Glicodata 🇧🇷 / 🇵🇹
+# 💉​ Projeto Glicodata
 
 [Português](#projeto-glicodata-portuguese) 🇧🇷 / 🇵🇹 | [English](#projeto-glicodata-english) 🇺🇸 / 🇬🇧 / 🇨🇦 / 🇦🇺
 
@@ -55,7 +55,7 @@ ubs-system/
 
 ---
 
-# Glicodata Project 🇺🇸 / 🇬🇧 / 🇨🇦 / 🇦🇺
+# 💉​ Glicodata Project
 
 [Português](#projeto-glicodata-portuguese) 🇧🇷 / 🇵🇹 | [English](#projeto-glicodata-english) 🇺🇸 / 🇬🇧 / 🇨🇦 / 🇦🇺
 
