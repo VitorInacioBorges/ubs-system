@@ -1,137 +1,116 @@
-# 🚀 laravel-projects
+# Projeto Glicodata 🇧🇷 / 🇵🇹
 
-Um repositório de apoio para aprender e testar aplicações feitas com o framework Laravel — ideal para estudos, experimentos e pequenos protótipos.
+[Português](#projeto-ubs-system--glicodata-) 🇧🇷 / 🇵🇹 | [English](#ubs-system--glicodata-project-) 🇺🇸 / 🇬🇧 / 🇨🇦 / 🇦🇺
 
-## 📚 Sumário
+Sistema Laravel para apoiar o cadastro e a organizacao de dados de UBS, usuarios, pacientes, avaliacoes, riscos e relatorios relacionados ao acompanhamento de risco de Diabetes Mellitus II.
 
-- Sobre o projeto
-- Objetivo do repositório
-- Estrutura do projeto (pastas principais)
-- Como rodar localmente
-- Testes
-- Contribuições e próximos passos
+## Propósito
 
-## 🔍 Sobre o projeto de teste
+Oferecer uma base de API e interface web simples para registrar unidades basicas de saude, pacientes, profissionais, avaliacoes clinicas, classificacoes de risco e relatorios. O projeto tambem funciona como base de estudo para arquitetura Laravel com controllers, services, repositories, Eloquent models, Blade, Vite e testes PHPUnit.
 
-O diretório `test-project/` contém uma aplicação Laravel pronta para desenvolvimento local. É uma base minimalista com exemplos de configuração, testes e assets front-end.
+## Objetivos
 
-Principais arquivos/artefatos em `test-project/`:
+- **Gestao de UBS**: Cadastro de distritos e unidades basicas de saude com dados de contato, endereco, bairro de referencia e status ativo.
+- **Cadastro Operacional**: Registro de usuarios do sistema e pacientes vinculados a uma UBS.
+- **Avaliacoes e Risco**: Modelagem de avaliacoes, respostas, sintomas e classificacao de risco em `low`, `moderate` ou `high`.
+- **Relatorios**: Registro de titulos, descricoes e comentarios associados a uma avaliacao.
+- **Base Laravel Evolutiva**: Separacao pragmatica entre controllers, services, repositories e models para evoluir validacao, autenticacao, migrations e testes.
 
-- 🛠 `artisan` — CLI do framework (comandos do Laravel)
-- 📦 `composer.json` — dependências PHP e scripts
-- 🧩 `package.json` e `vite.config.js` — dependências e build do front-end
-- 🧪 `phpunit.xml` — configuração dos testes automatizados
+## Servicos
 
-## 🎯 Objetivo deste repositório
+| Servico             | Descricao                                                                                                        |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| **Backend API**     | API REST em **Laravel 12** e **PHP 8.2+**, organizada por controllers, services, repositories e Eloquent models. |
+| **Interface Blade** | Views server-side simples para home, contato e formulario de registro, com Bootstrap via CDN e assets publicos.  |
+| **Assets**          | Build com **Vite 7**, **Tailwind CSS 4**, `laravel-vite-plugin` e Axios inicializado no bootstrap JS.            |
+| **Banco de Dados**  | Configuracao default em SQLite; conexao PostgreSQL disponivel via `DB_CONNECTION=pgsql`.                         |
 
-- ✍️ Servir como material de estudo para desenvolvedores que estão aprendendo Laravel
-- 🧪 Oferecer um ambiente para experimentar mudanças (migrations, updates de dependências, refactors)
-- 📁 Fornecer uma estrutura base reutilizável para iniciar pequenos projetos ou exercícios
+## Documentacao Tecnica
 
-## 📁 Estrutura e funcionamento das pastas padrão do Laravel
+| Documento                                                         | Descricao                                                           |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------- |
+| [ARCHITECTURE.md](./documentation/portuguese/ARCHITECTURE.md)     | Fundacao arquitetural, camadas, fluxo de dados e modulos do sistema |
+| [DIRECTORIES.md](./documentation/portuguese/DIRECTORIES.md)       | Mapeamento completo de diretorios e responsabilidades               |
+| [TECHNOLOGIES.md](./documentation/portuguese/TECHNOLOGIES.md)     | Stack, metodologias, dependencias e gerenciamento de dados          |
+| [CONVENTIONS.md](./documentation/portuguese/CONVENTIONS.md)       | Padroes de nomeacao, organizacao e design patterns                  |
+| [BEST-PRACTICES.md](./documentation/portuguese/BEST-PRACTICES.md) | SOLID, tratamento de erros, testes, seguranca e riscos atuais       |
+| [PREREQUISITES.md](./documentation/portuguese/PREREQUISITES.md)   | Dependencias de sistema, ferramentas, banco e hardware              |
+| [EXECUTION.md](./documentation/portuguese/EXECUTION.md)           | Setup local, variaveis de ambiente, migrations, endpoints e deploy  |
 
-Abaixo está um resumo objetivo do propósito das pastas que você encontrará em `test-project/`.
+## Estrutura Geral
 
-- 📂 `app/`
-  - Contém a lógica da aplicação: controllers, models, providers e outros serviços de domínio.
-
-- 🚀 `bootstrap/`
-  - Inicialização do framework (ex.: `app.php`). A pasta `cache/` guarda arquivos otimizados para boot mais rápido.
-
-- ⚙️ `config/`
-  - Arquivos de configuração (ex.: `app.php`, `database.php`). Prefira usar variáveis de ambiente no `.env` para personalização.
-
-- 🗄 `database/`
-  - Migrations, seeders e factories para versionamento do schema e dados de teste.
-
-- 🌐 `public/`
-  - Ponto de entrada público (index.php). Aqui ficam assets compilados e arquivos públicos.
-
-- 🎨 `resources/`
-  - Views Blade (`resources/views`), assets não compilados (CSS/JS) e arquivos de tradução.
-
-- 🧭 `routes/`
-  - Definição das rotas (`web.php`, `api.php`, etc.) que mapeiam requisições para controllers.
-
-- 🗂 `storage/`
-  - Logs, uploads, cache e sessões. Não inclua arquivos de usuário no repositório.
-
-- ✅ `tests/`
-  - Testes automatizados (Feature / Unit). Execute-os com `php artisan test`.
-
-- 📦 `vendor/`
-  - Dependências externas gerenciadas pelo Composer. Normalmente não versionadas (gitignore), mas podem estar presentes localmente.
-
-## ⚙️ Como rodar o projeto localmente (guia rápido)
-
-Requisitos: PHP 8.x ou superior, Composer, Node.js/NPM, e um banco (MySQL/Postgres/SQLite).
-
-1. Entre no diretório do projeto:
-
-```bash
-cd test-project
+```text
+ubs-system/
+├── application/          # Aplicacao Laravel 12
+│   ├── app/              # Controllers, services, repositories, models, providers e utils
+│   ├── database/         # Migrations, factories e seeders
+│   ├── resources/        # Views Blade e entradas Vite
+│   ├── routes/           # Rotas carregadas com prefixo /api
+│   └── tests/            # Testes Feature e Unit
+├── documentation/
+│   ├── english/          # Documentacao em ingles
+│   └── portuguese/       # Documentacao em portugues
+└── README.md             # Este arquivo
 ```
-
-2. Instale dependências PHP e JS:
-
-```bash
-composer install
-npm install
-```
-
-3. Configure o ambiente:
-
-```bash
-cp .env.example .env
-php artisan key:generate
-# Edite .env para ajustar conexão com banco, se necessário
-```
-
-4. Rode migrations e (opcionalmente) seeders:
-
-```bash
-php artisan migrate --seed
-```
-
-5. Compile assets e inicie o servidor de desenvolvimento:
-
-```bash
-npm run dev
-php artisan serve
-```
-
-6. Execute os testes:
-
-```bash
-php artisan test
-# ou
-./vendor/bin/phpunit
-```
-
-Dica: Você pode usar Docker/Sail para isolar o ambiente (recomendado para consistência entre máquinas).
-
-## 🧪 Testes
-
-- Rodar todos: `php artisan test` ou `./vendor/bin/phpunit`
-- Localize testes em `tests/Feature` e `tests/Unit`.
-
-## 🤝 Contribuições e próximos passos
-
-- Abra issues ou PRs para melhorias, correções ou documentação adicional.
-- Sugestões de melhorias:
-  - Adicionar um `.env.example` completo ✅
-  - Scripts de CI para rodar testes automaticamente (GitHub Actions, GitLab CI)
-  - Exemplos de endpoints (Postman collection / OpenAPI)
-  - Instruções para usar Docker/Sail 📦🐳
-
-## 📬 Contato
-
-Se precisar de ajuda, abra uma issue no repositório ou entre em contato com o mantenedor.
 
 ---
 
-Versão: README formatado com emojis para melhor leitura e navegação.
+# Glicodata Project 🇺🇸 / 🇬🇧 / 🇨🇦 / 🇦🇺
+
+[Português](#projeto-ubs-system--glicodata-) 🇧🇷 / 🇵🇹 | [English](#ubs-system--glicodata-project-) 🇺🇸 / 🇬🇧 / 🇨🇦 / 🇦🇺
+
+Laravel system to support UBS unit, user, patient, assessment, risk, and report data related to Diabetes Mellitus II risk tracking.
+
+## Purpose
+
+To provide an API and simple web interface foundation for registering basic health units, patients, professionals, clinical assessments, risk classifications, and reports. The project also serves as a study base for Laravel architecture with controllers, services, repositories, Eloquent models, Blade, Vite, and PHPUnit tests.
+
+## Objectives
+
+- **UBS Management**: Register districts and basic health units with contact data, address, reference neighborhood, and active status.
+- **Operational Registration**: Register system users and patients linked to a UBS unit.
+- **Assessments and Risk**: Model assessments, answers, symptoms, and risk classification as `low`, `moderate`, or `high`.
+- **Reports**: Register titles, descriptions, and comments associated with an assessment.
+- **Evolvable Laravel Base**: Pragmatic separation between controllers, services, repositories, and models to evolve validation, authentication, migrations, and tests.
+
+## Services
+
+| Service             | Description                                                                                                                 |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| **Backend API**     | REST API built with **Laravel 12** and **PHP 8.2+**, organized by controllers, services, repositories, and Eloquent models. |
+| **Blade Interface** | Simple server-side views for home, contact, and registration form, with Bootstrap CDN and public assets.                    |
+| **Assets**          | Build with **Vite 7**, **Tailwind CSS 4**, `laravel-vite-plugin`, and Axios initialized in the JS bootstrap.                |
+| **Database**        | SQLite as the default configuration; PostgreSQL connection available through `DB_CONNECTION=pgsql`.                         |
+
+## Technical Documentation
+
+| Document                                                       | Description                                                           |
+| -------------------------------------------------------------- | --------------------------------------------------------------------- |
+| [ARCHITECTURE.md](./documentation/english/ARCHITECTURE.md)     | Architectural foundation, layers, data flow, and system modules       |
+| [DIRECTORIES.md](./documentation/english/DIRECTORIES.md)       | Complete mapping of directories and responsibilities                  |
+| [TECHNOLOGIES.md](./documentation/english/TECHNOLOGIES.md)     | Stack, methodology, dependencies, and data management                 |
+| [CONVENTIONS.md](./documentation/english/CONVENTIONS.md)       | Naming patterns, organization, and design patterns                    |
+| [BEST-PRACTICES.md](./documentation/english/BEST-PRACTICES.md) | SOLID, error handling, tests, security, and current risks             |
+| [PREREQUISITES.md](./documentation/english/PREREQUISITES.md)   | System dependencies, tools, database, and hardware                    |
+| [EXECUTION.md](./documentation/english/EXECUTION.md)           | Local setup, environment variables, migrations, endpoints, and deploy |
+
+## General Structure
+
+```text
+ubs-system/
+├── application/          # Laravel 12 application
+│   ├── app/              # Controllers, services, repositories, models, providers, and utils
+│   ├── database/         # Migrations, factories, and seeders
+│   ├── resources/        # Blade views and Vite entries
+│   ├── routes/           # Routes loaded with /api prefix
+│   └── tests/            # Feature and Unit tests
+├── documentation/
+│   ├── english/          # English documentation
+│   └── portuguese/       # Portuguese documentation
+└── README.md             # This file
+```
 
 ## Sessions
 
 codex resume 019e171c-5e24-7371-b4cb-30138e1839c2
+019e1f24-9624-7022-bf2d-8ab1571cb629
