@@ -9,3 +9,5 @@
 <a href="/contact"> Contatos </a> <br>
 <a href="/register"> Cadastrar </a>
 <a href="/login"> Login </a>
+
+@endsection

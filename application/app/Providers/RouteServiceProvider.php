@@ -20,14 +20,11 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        foreach (glob(base_path('routes/*.php')) as $file) {
-            if (basename($file) === 'console.php') {
-                continue;
-            }
+        Route::middleware('web')
+            ->group(base_path('routes/web.php'));
 
-            Route::prefix('api')
-                ->middleware('api')
-                ->group($file);
-        }
+        Route::prefix('api')
+            ->middleware('api')
+            ->group(base_path('routes/api.php'));
     }
 }
