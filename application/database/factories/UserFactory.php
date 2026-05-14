@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\DistrictModel;
+use App\Models\UbsModel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -26,10 +28,31 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
+            'ubs_id' => function (): string {
+                $district = DistrictModel::query()->create([
+                    'name' => fake()->unique()->city(),
+                ]);
+
+                return UbsModel::query()->create([
+                    'district_id' => $district->id,
+                    'name' => fake()->company(),
+                    'bairro_ref' => fake()->streetName(),
+                    'address' => fake()->address(),
+                    'phone' => fake()->numerify('###########'),
+                    'email' => fake()->unique()->safeEmail(),
+                    'is_active' => true,
+                ])->id;
+            },
             'name' => fake()->name(),
+            'age' => fake()->numberBetween(18, 90),
+            'sex' => fake()->boolean(),
+            'cpf' => fake()->unique()->numerify('###########'),
+            'address' => fake()->address(),
+            'phone' => fake()->numerify('###########'),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
+            'role' => fake()->randomElement(['admin', 'user']),
             'remember_token' => Str::random(10),
         ];
     }

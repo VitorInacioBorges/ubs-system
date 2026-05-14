@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\DistrictModel;
+use App\Models\UbsModel;
 use App\Models\UserModel;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,11 +17,25 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // UserModel::factory(10)->create();
+        $district = DistrictModel::query()->create([
+            'name' => 'Distrito Teste',
+        ]);
+
+        $ubs = UbsModel::query()->create([
+            'district_id' => $district->id,
+            'name' => 'UBS Teste',
+            'bairro_ref' => 'Centro',
+            'address' => 'Rua Teste, 100',
+            'phone' => '42999999999',
+            'email' => 'ubs@example.com',
+            'is_active' => true,
+        ]);
 
         UserModel::factory()->create([
+            'ubs_id' => $ubs->id,
             'name' => 'Test User',
             'email' => 'test@example.com',
+            'cpf' => '00000000000',
         ]);
     }
 }
