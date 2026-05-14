@@ -122,28 +122,36 @@ Enums nativos do PHP usados como casts nos models.
 
 | Arquivo | Responsabilidade |
 | --- | --- |
-| `ValidateUtils.php` | Trait com `validateId()` para UUID e `validateEmail()` para email RFC ate 255 caracteres. |
+| `ValidateUtils.php` | Trait com validacoes de UUID, email RFC e payloads de create/update por entidade. |
 
 ### `application/app/Providers/`
 
 | Arquivo | Responsabilidade |
 | --- | --- |
 | `AppServiceProvider.php` | Carrega migrations do diretorio principal e de subdiretorios dentro de `database/migrations`. |
-| `RouteServiceProvider.php` | Carrega todos os arquivos PHP em `routes/`, exceto `console.php`, com middleware `api` e prefixo `/api`. |
+| `RouteServiceProvider.php` | Carrega `routes/web.php` com middleware `web` e `routes/api.php` com middleware `api` e prefixo `/api`. |
 
 ---
 
 ## Rotas
 
-### `application/routes/routes.php`
+### `application/routes/web.php`
 
-Arquivo unico de rotas do projeto. Como o `RouteServiceProvider` aplica prefixo `/api` a todos os arquivos em `routes/`, ate as views Blade ficam expostas com esse prefixo.
+Rotas de interface Blade, sem prefixo `/api`.
 
 | Rota | Tipo | Responsabilidade |
 | --- | --- | --- |
-| `GET /api` | Web view | Renderiza `home.blade.php`. |
-| `GET /api/register/{id?}` | Web view | Renderiza o formulario de registro. |
-| `POST /api/login` | Web action | Recebe formulario e executa `dd($data)` atualmente. |
+| `GET /` | Web view | Renderiza `home.blade.php`. |
+| `GET /contact` | Web view | Renderiza `contact.blade.php`. |
+| `GET /register/{id?}` | Web view | Renderiza o formulario de registro. |
+| `POST /login` | Web action | Recebe formulario e executa `dd($data)` atualmente. |
+
+### `application/routes/api.php`
+
+Rotas JSON carregadas com prefixo `/api`.
+
+| Rota | Tipo | Responsabilidade |
+| --- | --- | --- |
 | `apiResource` | REST JSON | CRUD para `districts`, `ubs`, `users`, `patients`, `assessments`, `risks`, `reports`. |
 | `DELETE /api/{resource}/{id}/delete-self` | REST JSON | Delecao alternativa para cada recurso. |
 
@@ -155,12 +163,18 @@ Arquivo unico de rotas do projeto. Como o `RouteServiceProvider` aplica prefixo 
 
 | Arquivo | Tabelas criadas |
 | --- | --- |
-| `2026_01_23_143151_create_users_table.php` | `users` |
+| `district-migrations/2026_01_23_143000_create_districts_table.php` | `districts` |
+| `ubs-migrations/2026_01_23_143100_create_ubs_table.php` | `ubs` |
+| `user-migrations/2026_01_23_143151_create_users_table.php` | `users` |
+| `patient-migrations/2026_01_23_143200_create_patients_table.php` | `patients` |
+| `assessment-migrations/2026_01_23_143300_create_assessments_table.php` | `assessments` |
+| `risk-migrations/2026_01_23_143400_create_risks_table.php` | `risks` |
+| `report-migrations/2026_01_23_143500_create_reports_table.php` | `reports` |
 | `2026_01_23_150700_password_reset_tokens.php` | `password_reset_tokens` |
 | `2026_04_27_135537_create_sessions_table.php` | `sessions` |
 | `2026_04_27_145038_create_cache_table.php` | `cache`, `cache_locks` |
 
-A migration versionada de `users` ainda nao acompanha todos os campos esperados por `UserModel`, e nao ha migrations versionadas para `districts`, `ubs`, `patients`, `assessments`, `risks` e `reports`.
+As migrations das entidades usam UUID e ficam separadas por pasta de entidade.
 
 ### `application/database/seeders/`
 
@@ -205,6 +219,6 @@ Arquivos de entrada do Vite configurados em `vite.config.js`: `resources/css/app
 
 | Caminho | Responsabilidade |
 | --- | --- |
-| `tests/Feature/ExampleTest.php` | Testa se `GET /api` retorna status 200. |
+| `tests/Feature/ExampleTest.php` | Testa se `GET /` retorna status 200. |
 | `tests/Unit/ExampleTest.php` | Teste unitario basico `assertTrue(true)`. |
 | `phpunit.xml` | Configura suite Unit e Feature com SQLite em memoria no ambiente de teste. |

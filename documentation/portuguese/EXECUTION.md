@@ -27,19 +27,6 @@ php artisan key:generate
 
 Configurar banco local no `.env`.
 
-#### SQLite
-
-```env
-DB_CONNECTION=sqlite
-DB_DATABASE=/caminho/absoluto/para/ubs-system/application/database/database.sqlite
-```
-
-Crie o arquivo caso ele nao exista:
-
-```bash
-touch database/database.sqlite
-```
-
 #### PostgreSQL
 
 ```env
@@ -63,7 +50,7 @@ createdb ubs_system
 php artisan migrate
 ```
 
-Observacao: as migrations versionadas no checkout atual nao cobrem todas as tabelas esperadas pelos models. Se a API CRUD for usada integralmente, crie ou ajuste migrations para `districts`, `ubs`, `patients`, `assessments`, `risks` e `reports`.
+Observacao: SQLite segue configurado em `phpunit.xml` apenas para testes automatizados em memoria.
 
 ### 5. Executar Seeders
 
@@ -87,10 +74,11 @@ Servidor padrao:
 http://127.0.0.1:8000
 ```
 
-Como as rotas do projeto recebem prefixo `/api`, a home atual fica em:
+As telas Blade ficam nas rotas web, enquanto os endpoints JSON ficam sob `/api`.
 
 ```text
-http://127.0.0.1:8000/api
+http://127.0.0.1:8000
+http://127.0.0.1:8000/api/users
 ```
 
 #### Vite
@@ -157,9 +145,9 @@ Todos os endpoints abaixo usam prefixo `/api`.
 | --- | --- | --- |
 | `GET` | `/districts` | `DistrictController@index` |
 | `POST` | `/districts` | `DistrictController@store` |
-| `GET` | `/districts/{district}` | `DistrictController@show` |
-| `PUT/PATCH` | `/districts/{district}` | `DistrictController@update` |
-| `DELETE` | `/districts/{district}` | `DistrictController@destroy` |
+| `GET` | `/districts/{id}` | `DistrictController@show` |
+| `PUT/PATCH` | `/districts/{id}` | `DistrictController@update` |
+| `DELETE` | `/districts/{id}` | `DistrictController@destroy` |
 | `DELETE` | `/districts/{id}/delete-self` | `DistrictController@deleteSelf` |
 
 O mesmo padrao se repete para:
@@ -171,13 +159,14 @@ O mesmo padrao se repete para:
 - `/api/risks`
 - `/api/reports`
 
-Rotas web tambem estao sob `/api`:
+Rotas web ficam fora do prefixo `/api`:
 
 | Metodo | Rota | Descricao |
 | --- | --- | --- |
-| `GET` | `/api` | Renderiza home. |
-| `GET` | `/api/register/{id?}` | Renderiza formulario de registro. |
-| `POST` | `/api/login` | Recebe formulario e executa `dd($data)`. |
+| `GET` | `/` | Renderiza home. |
+| `GET` | `/contact` | Renderiza pagina de contato. |
+| `GET` | `/register/{id?}` | Renderiza formulario de registro. |
+| `POST` | `/login` | Recebe formulario e executa `dd($data)`. |
 
 ---
 
@@ -294,6 +283,6 @@ curl -i https://seu-dominio.example/api
 - Definir `APP_ENV=production`.
 - Definir `APP_DEBUG=false`.
 - Configurar `APP_KEY`.
-- Usar banco persistente, preferencialmente PostgreSQL ou MySQL.
+- Usar banco persistente PostgreSQL.
 - Garantir permissao de escrita em `storage/` e `bootstrap/cache/`.
 - Nao versionar `.env`, logs, caches, `vendor/` ou `node_modules/`.

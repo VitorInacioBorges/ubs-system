@@ -9,8 +9,8 @@
 | **PHP** | `^8.2` in Composer; `8.3.6` observed locally | Laravel application runtime. |
 | **Laravel Framework** | `^12.0`; `12.37.0` installed | MVC framework, routing, container, Eloquent, migrations, and tests. |
 | **Eloquent ORM** | Included in Laravel | Models, relationships, casts, fillable fields, and queries. |
-| **SQLite** | Default in `.env.example` | Default database for local development and tests. |
-| **PostgreSQL** | Supported by `config/database.php` through the `pgsql` connection | Relational database option when `DB_CONNECTION=pgsql`. |
+| **PostgreSQL** | Default in `.env.example` and `config/database.php` | Project default database following PDS-UEPG. |
+| **SQLite** | Configured in `phpunit.xml` | In-memory database for local automated tests. |
 | **Laravel Tinker** | `^2.10.1` | REPL for local inspection and operations. |
 
 ### Web Interface and Assets

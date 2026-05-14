@@ -19,32 +19,32 @@ On the web interface side, the architecture uses **Blade templates** with a base
 ```text
 ┌─────────────────────────────────────────────────────────────┐
 │                         HTTP / API                          │
-│  routes/routes.php -> RouteServiceProvider -> /api prefix    │
+│  routes/web.php and api.php -> RouteServiceProvider         │
 └──────────────────────────────┬──────────────────────────────┘
                                │
 ┌──────────────────────────────▼──────────────────────────────┐
 │                        Controllers                          │
-│  Receive Request, per_page query string, and route params    │
+│  Receive Request, per_page query string, and route params   │
 └──────────────────────────────┬──────────────────────────────┘
                                │
 ┌──────────────────────────────▼──────────────────────────────┐
 │                          Services                           │
-│  Validate UUID/email, normalize pagination, orchestrate CRUD │
+│  Validate UUID/email, normalize pagination, orchestrate CRUD│
 └──────────────────────────────┬──────────────────────────────┘
                                │
 ┌──────────────────────────────▼──────────────────────────────┐
 │                        Repositories                         │
-│  Encapsulate Eloquent queries and record creation            │
+│  Encapsulate Eloquent queries and record creation           │
 └──────────────────────────────┬──────────────────────────────┘
                                │
 ┌──────────────────────────────▼──────────────────────────────┐
 │                       Eloquent Models                       │
-│  Tables, fillable fields, casts, and relationships           │
+│  Tables, fillable fields, casts, and relationships          │
 └──────────────────────────────┬──────────────────────────────┘
                                │
 ┌──────────────────────────────▼──────────────────────────────┐
 │                          Database                           │
-│  Default SQLite configuration; Laravel pgsql support         │
+│  PostgreSQL by default; SQLite only for tests               │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -53,17 +53,17 @@ On the web interface side, the architecture uses **Blade templates** with a base
 ```text
 ┌─────────────────────────────────────────────────────────────┐
 │                      resources/views                        │
-│  home.blade.php | register.blade.php | contact.blade.php     │
+│  home.blade.php | register.blade.php | contact.blade.php    │
 └──────────────────────────────┬──────────────────────────────┘
                                │
 ┌──────────────────────────────▼──────────────────────────────┐
-│                 resources/views/layouts/main.blade.php       │
-│  Base HTML, Bootstrap CDN, Roboto font, and public assets     │
+│                 resources/views/layouts/main.blade.php      │
+│  Base HTML, Bootstrap CDN, Roboto font, and public assets   │
 └──────────────────────────────┬──────────────────────────────┘
                                │
 ┌──────────────────────────────▼──────────────────────────────┐
-│                    public/css and public/js                  │
-│  styles.css and scripts.js; register.styles.css is in resources/css │
+│                    public/css and public/js                 │
+│  styles.css and scripts.js; register.styles.css is in resources/css│
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -86,7 +86,7 @@ On the web interface side, the architecture uses **Blade templates** with a base
 ### API: Lookup by ID
 
 ```text
-1. Client sends GET /api/users/{user}.
+1. Client sends GET /api/users/{id}.
 2. UserController@show calls UserService::getUserById($id).
 3. ValidateUtils::validateId() requires a valid UUID.
 4. UserRepository::findUserById($id) queries the record with Eloquent.
@@ -97,9 +97,9 @@ On the web interface side, the architecture uses **Blade templates** with a base
 ### Web: Registration Form
 
 ```text
-1. Client opens GET /api/register/{id?}.
+1. Client opens GET /register/{id?}.
 2. The route renders resources/views/register.blade.php.
-3. The form submits POST to the named route web, exposed as /api/login.
+3. The form submits POST to the named route web, exposed as /login.
 4. The current route dumps the submitted payload with dd($data).
 ```
 
@@ -137,15 +137,15 @@ There are no formal repository interfaces at the moment. The current separation 
 
 ## System Modules
 
-| Module | Responsibility |
-| --- | --- |
-| `District` | District registration and lookup for UBS units. |
-| `Ubs` | UBS unit registration with contact data, neighborhood, address, and active status. |
-| `User` | System user registration, including `admin` or `user` role, personal data, and UBS linkage. |
-| `Patient` | Patient registration linked to a UBS unit. |
-| `Assessment` | Assessment created by a user for a patient in a UBS unit, with symptoms and answers. |
-| `Risk` | Risk record associated with an assessment, including percentage, score, and `low`, `moderate`, or `high` classification. |
-| `Report` | Report associated with an assessment, including title, description, and comment. |
+| Module       | Responsibility                                                                                                           |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| `District`   | District registration and lookup for UBS units.                                                                          |
+| `Ubs`        | UBS unit registration with contact data, neighborhood, address, and active status.                                       |
+| `User`       | System user registration, including `admin` or `user` role, personal data, and UBS linkage.                              |
+| `Patient`    | Patient registration linked to a UBS unit.                                                                               |
+| `Assessment` | Assessment created by a user for a patient in a UBS unit, with symptoms and answers.                                     |
+| `Risk`       | Risk record associated with an assessment, including percentage, score, and `low`, `moderate`, or `high` classification. |
+| `Report`     | Report associated with an assessment, including title, description, and comment.                                         |
 
 ---
 

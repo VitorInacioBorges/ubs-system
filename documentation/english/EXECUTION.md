@@ -27,19 +27,6 @@ php artisan key:generate
 
 Configure the local database in `.env`.
 
-#### SQLite
-
-```env
-DB_CONNECTION=sqlite
-DB_DATABASE=/absolute/path/to/ubs-system/application/database/database.sqlite
-```
-
-Create the file if it does not exist:
-
-```bash
-touch database/database.sqlite
-```
-
 #### PostgreSQL
 
 ```env
@@ -63,7 +50,7 @@ createdb ubs_system
 php artisan migrate
 ```
 
-Observation: the versioned migrations in the current checkout do not cover every table expected by the models. If the full CRUD API will be used, create or adjust migrations for `districts`, `ubs`, `patients`, `assessments`, `risks`, and `reports`.
+Observation: SQLite remains configured in `phpunit.xml` only for in-memory automated tests.
 
 ### 5. Run Seeders
 
@@ -87,10 +74,11 @@ Default server:
 http://127.0.0.1:8000
 ```
 
-Because project routes receive the `/api` prefix, the current home page is:
+Blade screens use web routes, while JSON endpoints live under `/api`.
 
 ```text
-http://127.0.0.1:8000/api
+http://127.0.0.1:8000
+http://127.0.0.1:8000/api/users
 ```
 
 #### Vite
@@ -157,9 +145,9 @@ All endpoints below use the `/api` prefix.
 | --- | --- | --- |
 | `GET` | `/districts` | `DistrictController@index` |
 | `POST` | `/districts` | `DistrictController@store` |
-| `GET` | `/districts/{district}` | `DistrictController@show` |
-| `PUT/PATCH` | `/districts/{district}` | `DistrictController@update` |
-| `DELETE` | `/districts/{district}` | `DistrictController@destroy` |
+| `GET` | `/districts/{id}` | `DistrictController@show` |
+| `PUT/PATCH` | `/districts/{id}` | `DistrictController@update` |
+| `DELETE` | `/districts/{id}` | `DistrictController@destroy` |
 | `DELETE` | `/districts/{id}/delete-self` | `DistrictController@deleteSelf` |
 
 The same pattern repeats for:
@@ -171,13 +159,14 @@ The same pattern repeats for:
 - `/api/risks`
 - `/api/reports`
 
-Web routes are also under `/api`:
+Web routes stay outside the `/api` prefix:
 
 | Method | Route | Description |
 | --- | --- | --- |
-| `GET` | `/api` | Renders the home page. |
-| `GET` | `/api/register/{id?}` | Renders the registration form. |
-| `POST` | `/api/login` | Receives the form and runs `dd($data)`. |
+| `GET` | `/` | Renders the home page. |
+| `GET` | `/contact` | Renders the contact page. |
+| `GET` | `/register/{id?}` | Renders the registration form. |
+| `POST` | `/login` | Receives the form and runs `dd($data)`. |
 
 ---
 
@@ -294,6 +283,6 @@ curl -i https://your-domain.example/api
 - Set `APP_ENV=production`.
 - Set `APP_DEBUG=false`.
 - Configure `APP_KEY`.
-- Use a persistent database, preferably PostgreSQL or MySQL.
+- Use a persistent PostgreSQL database.
 - Ensure write permission for `storage/` and `bootstrap/cache/`.
 - Do not version `.env`, logs, caches, `vendor/`, or `node_modules/`.

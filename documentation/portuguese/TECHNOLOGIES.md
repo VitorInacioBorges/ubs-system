@@ -9,8 +9,8 @@
 | **PHP** | `^8.2` no Composer; `8.3.6` observado localmente | Runtime da aplicacao Laravel. |
 | **Laravel Framework** | `^12.0`; `12.37.0` instalado | Framework MVC, roteamento, container, Eloquent, migrations e testes. |
 | **Eloquent ORM** | Incluso no Laravel | Models, relacionamentos, casts, fillable e consultas. |
-| **SQLite** | Default em `.env.example` | Banco padrao para desenvolvimento local e testes. |
-| **PostgreSQL** | Suportado por `config/database.php` via conexao `pgsql` | Opcao de banco relacional quando `DB_CONNECTION=pgsql`. |
+| **PostgreSQL** | Default em `.env.example` e `config/database.php` | Banco padrao do projeto conforme PDS-UEPG. |
+| **SQLite** | Configurado em `phpunit.xml` | Banco em memoria para testes automatizados locais. |
 | **Laravel Tinker** | `^2.10.1` | REPL para inspecao e operacoes locais. |
 
 ### Interface Web e Assets

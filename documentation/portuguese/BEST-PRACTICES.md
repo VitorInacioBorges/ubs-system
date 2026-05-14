@@ -77,7 +77,8 @@ application/tests/
 
 O checkout atual possui testes de exemplo:
 
-- `GET /api` deve retornar status 200.
+- `GET /` deve retornar status 200.
+- `GET /api/users` deve retornar status 200 quando o banco de teste esta migrado.
 - Um teste unitario simples garante que `true` e verdadeiro.
 
 Para cobrir a API real, priorize:
@@ -94,7 +95,7 @@ Para cobrir a API real, priorize:
 
 ### Autenticacao
 
-`UserModel` estende `Authenticatable` e possui cast `password => hashed`, mas o codigo atual nao implementa login real, tokens, guards ou middleware de autenticacao nas rotas da API. A rota `POST /api/login` apenas executa `dd($data)` dos dados recebidos pelo formulario.
+`UserModel` estende `Authenticatable` e possui cast `password => hashed`, mas o codigo atual nao implementa login real, tokens, guards ou middleware de autenticacao nas rotas da API. A rota web `POST /login` apenas executa `dd($data)` dos dados recebidos pelo formulario.
 
 ### Autorizacao
 
@@ -117,7 +118,7 @@ O enum `UserRole` define `admin` e `user`, mas ainda nao ha Policies, Gates ou v
 ```env
 APP_ENV=local
 APP_DEBUG=true
-DB_CONNECTION=sqlite
+DB_CONNECTION=pgsql
 SESSION_DRIVER=database
 QUEUE_CONNECTION=database
 CACHE_STORE=database
@@ -128,7 +129,7 @@ Em producao:
 - `APP_DEBUG` deve ser `false`.
 - `APP_KEY` deve estar gerado e protegido.
 - Credenciais de banco devem ficar somente em `.env`.
-- Se PostgreSQL for usado, definir `DB_CONNECTION=pgsql`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` e `DB_PASSWORD`.
+- Definir `DB_CONNECTION=pgsql`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` e `DB_PASSWORD` nos ambientes da aplicacao.
 
 ---
 

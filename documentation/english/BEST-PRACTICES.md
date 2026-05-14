@@ -77,7 +77,8 @@ application/tests/
 
 The current checkout contains example tests:
 
-- `GET /api` must return HTTP 200.
+- `GET /` must return HTTP 200.
+- `GET /api/users` must return HTTP 200 when the test database is migrated.
 - One basic unit test asserts that `true` is true.
 
 To cover the real API, prioritize:
@@ -94,7 +95,7 @@ To cover the real API, prioritize:
 
 ### Authentication
 
-`UserModel` extends `Authenticatable` and has the `password => hashed` cast, but the current code does not implement real login, tokens, guards, or authentication middleware on API routes. The `POST /api/login` route only runs `dd($data)` on the submitted form payload.
+`UserModel` extends `Authenticatable` and has the `password => hashed` cast, but the current code does not implement real login, tokens, guards, or authentication middleware on API routes. The web `POST /login` route only runs `dd($data)` on the submitted form payload.
 
 ### Authorization
 
@@ -117,7 +118,7 @@ The `UserRole` enum defines `admin` and `user`, but there are no Policies, Gates
 ```env
 APP_ENV=local
 APP_DEBUG=true
-DB_CONNECTION=sqlite
+DB_CONNECTION=pgsql
 SESSION_DRIVER=database
 QUEUE_CONNECTION=database
 CACHE_STORE=database
@@ -128,7 +129,7 @@ In production:
 - `APP_DEBUG` must be `false`.
 - `APP_KEY` must be generated and protected.
 - Database credentials must live only in `.env`.
-- If PostgreSQL is used, define `DB_CONNECTION=pgsql`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, and `DB_PASSWORD`.
+- Define `DB_CONNECTION=pgsql`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, and `DB_PASSWORD` in application environments.
 
 ---
 

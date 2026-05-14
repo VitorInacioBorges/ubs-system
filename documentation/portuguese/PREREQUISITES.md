@@ -25,19 +25,19 @@ Versoes observadas durante a geracao desta documentacao:
 
 | Banco | Status no projeto | Verificacao |
 | --- | --- | --- |
-| **SQLite** | Default em `.env.example` e em `phpunit.xml`. | `php -m | grep sqlite` |
-| **PostgreSQL** | Suportado por `config/database.php` usando `DB_CONNECTION=pgsql`. | `psql --version` |
+| **PostgreSQL** | Banco padrao em `.env.example` e em `config/database.php`, conforme PDS-UEPG. | `psql --version` |
+| **SQLite** | Usado apenas em testes automatizados via `phpunit.xml`, quando configurado. | `php -m | grep sqlite` |
 | **MySQL/MariaDB/SQL Server** | Conexoes padrao do Laravel mantidas em `config/database.php`. | Cliente correspondente |
 
-Para desenvolvimento rapido, SQLite e suficiente para rotas e testes basicos. Para ambientes compartilhados ou producao, use PostgreSQL ou outro banco relacional suportado e mantenha migrations alinhadas aos models.
+Para novos sistemas no contexto NTI/UEPG, PostgreSQL e o banco padrao do projeto. SQLite permanece apenas como banco em memoria para testes automatizados locais.
 
 ### Extensoes PHP Relevantes
 
 | Extensao | Motivo |
 | --- | --- |
 | `pdo` | Acesso a banco de dados via Laravel. |
-| `pdo_sqlite` | Necessario para SQLite local e testes em memoria. |
-| `pdo_pgsql` | Necessario se `DB_CONNECTION=pgsql`. |
+| `pdo_pgsql` | Necessario para a conexao padrao PostgreSQL. |
+| `pdo_sqlite` | Necessario apenas para SQLite em memoria nos testes automatizados. |
 | `mbstring` | Dependencia comum do Laravel e Symfony. |
 | `openssl` | Criptografia, chaves e operacoes seguras. |
 | `fileinfo` | Validacao e manipulacao de arquivos. |
@@ -99,7 +99,7 @@ Para desenvolvimento rapido, SQLite e suficiente para rotas e testes basicos. Pa
 | --- | --- | --- |
 | `8000` | `php artisan serve` | Desenvolvimento |
 | `5173` | Vite dev server | Desenvolvimento |
-| `5432` | PostgreSQL, quando usado | Desenvolvimento/producao |
+| `5432` | PostgreSQL | Desenvolvimento/producao |
 | `80` | HTTP via Nginx/Apache | Producao |
 | `443` | HTTPS via Nginx/Apache | Producao |
 
@@ -113,7 +113,7 @@ Antes de executar a aplicacao:
 2. Instale dependencias JS com npm.
 3. Copie `.env.example` para `.env`.
 4. Gere `APP_KEY`.
-5. Configure `DB_CONNECTION` e credenciais do banco.
+5. Configure as credenciais PostgreSQL.
 6. Rode migrations.
 
 Para testes automatizados, `phpunit.xml` ja define SQLite em memoria:

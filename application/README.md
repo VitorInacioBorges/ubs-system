@@ -15,7 +15,7 @@ Use a documentacao principal na raiz do repositorio:
 | Framework | Laravel 12 |
 | Runtime | PHP 8.2+ |
 | Camadas | Controllers, Services, Repositories e Eloquent Models |
-| Rotas | Arquivos em `routes/` carregados com prefixo `/api` |
+| Rotas | `routes/web.php` para Blade e `routes/api.php` carregado com prefixo `/api` |
 | Views | Blade em `resources/views` |
 | Assets | Vite, Tailwind CSS, Axios e Bootstrap CDN |
 | Testes | PHPUnit via `php artisan test` |

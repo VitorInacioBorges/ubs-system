@@ -19,32 +19,32 @@ Na interface web, a arquitetura usa **Blade templates** com um layout base, pagi
 ```text
 ┌─────────────────────────────────────────────────────────────┐
 │                         HTTP / API                          │
-│  routes/routes.php -> RouteServiceProvider -> prefixo /api   │
+│  routes/web.php e api.php -> RouteServiceProvider           │
 └──────────────────────────────┬──────────────────────────────┘
                                │
 ┌──────────────────────────────▼──────────────────────────────┐
 │                        Controllers                          │
-│  Recebem Request, query string per_page e parametros de rota │
+│  Recebem Request, query string per_page e parametros de rota│
 └──────────────────────────────┬──────────────────────────────┘
                                │
 ┌──────────────────────────────▼──────────────────────────────┐
 │                          Services                           │
-│  Validam UUID/email, normalizam paginacao e orquestram CRUD  │
+│  Validam UUID/email, normalizam paginacao e orquestram CRUD │
 └──────────────────────────────┬──────────────────────────────┘
                                │
 ┌──────────────────────────────▼──────────────────────────────┐
 │                        Repositories                         │
-│  Encapsulam consultas Eloquent e criacao de registros        │
+│  Encapsulam consultas Eloquent e criacao de registros       │
 └──────────────────────────────┬──────────────────────────────┘
                                │
 ┌──────────────────────────────▼──────────────────────────────┐
 │                       Eloquent Models                       │
-│  Tabelas, fillable, casts e relacionamentos                  │
+│  Tabelas, fillable, casts e relacionamentos                 │
 └──────────────────────────────┬──────────────────────────────┘
                                │
 ┌──────────────────────────────▼──────────────────────────────┐
 │                           Banco                             │
-│  Configuracao default SQLite; suporte Laravel para pgsql     │
+│  PostgreSQL como padrao; SQLite somente em testes           │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -53,17 +53,17 @@ Na interface web, a arquitetura usa **Blade templates** com um layout base, pagi
 ```text
 ┌─────────────────────────────────────────────────────────────┐
 │                      resources/views                        │
-│  home.blade.php | register.blade.php | contact.blade.php     │
+│  home.blade.php | register.blade.php | contact.blade.php    │
 └──────────────────────────────┬──────────────────────────────┘
                                │
 ┌──────────────────────────────▼──────────────────────────────┐
-│                 resources/views/layouts/main.blade.php       │
-│  HTML base, Bootstrap via CDN, fonte Roboto e assets publicos │
+│                 resources/views/layouts/main.blade.php      │
+│  HTML base, Bootstrap via CDN, fonte Roboto e assets publicos│
 └──────────────────────────────┬──────────────────────────────┘
                                │
 ┌──────────────────────────────▼──────────────────────────────┐
-│                    public/css e public/js                    │
-│  styles.css e scripts.js; register.styles.css fica em resources/css │
+│                    public/css e public/js                   │
+│  styles.css e scripts.js; register.styles.css fica em resources/css│
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -86,7 +86,7 @@ Na interface web, a arquitetura usa **Blade templates** com um layout base, pagi
 ### API: Consulta por ID
 
 ```text
-1. Cliente envia GET /api/users/{user}.
+1. Cliente envia GET /api/users/{id}.
 2. UserController@show chama UserService::getUserById($id).
 3. ValidateUtils::validateId() exige UUID valido.
 4. UserRepository::findUserById($id) busca o registro via Eloquent.
@@ -97,9 +97,9 @@ Na interface web, a arquitetura usa **Blade templates** com um layout base, pagi
 ### Web: Formulario de Registro
 
 ```text
-1. Cliente acessa GET /api/register/{id?}.
+1. Cliente acessa GET /register/{id?}.
 2. A rota renderiza resources/views/register.blade.php.
-3. O formulario envia POST para a rota nomeada web, exposta como /api/login.
+3. O formulario envia POST para a rota nomeada web, exposta como /login.
 4. A rota atual faz dump dos dados recebidos com dd($data).
 ```
 
@@ -137,15 +137,15 @@ Nao ha interfaces formais para repositories neste momento. A separacao atual ain
 
 ## Modulos do Sistema
 
-| Modulo | Responsabilidade |
-| --- | --- |
-| `District` | Cadastro e consulta de distritos aos quais UBS pertencem. |
-| `Ubs` | Cadastro de unidades basicas de saude com dados de contato, bairro, endereco e status ativo. |
-| `User` | Cadastro de usuarios do sistema, incluindo role `admin` ou `user`, dados pessoais e vinculo com UBS. |
-| `Patient` | Cadastro de pacientes vinculados a uma UBS. |
-| `Assessment` | Registro de avaliacao feita por usuario para paciente em uma UBS, com sintomas e respostas. |
-| `Risk` | Registro de risco associado a avaliacao, com percentual, score e classificacao `low`, `moderate` ou `high`. |
-| `Report` | Relatorio associado a uma avaliacao, com titulo, descricao e comentario. |
+| Modulo       | Responsabilidade                                                                                            |
+| ------------ | ----------------------------------------------------------------------------------------------------------- |
+| `District`   | Cadastro e consulta de distritos aos quais UBS pertencem.                                                   |
+| `Ubs`        | Cadastro de unidades basicas de saude com dados de contato, bairro, endereco e status ativo.                |
+| `User`       | Cadastro de usuarios do sistema, incluindo role `admin` ou `user`, dados pessoais e vinculo com UBS.        |
+| `Patient`    | Cadastro de pacientes vinculados a uma UBS.                                                                 |
+| `Assessment` | Registro de avaliacao feita por usuario para paciente em uma UBS, com sintomas e respostas.                 |
+| `Risk`       | Registro de risco associado a avaliacao, com percentual, score e classificacao `low`, `moderate` ou `high`. |
+| `Report`     | Relatorio associado a uma avaliacao, com titulo, descricao e comentario.                                    |
 
 ---
 

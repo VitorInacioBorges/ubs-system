@@ -25,19 +25,19 @@ Versions observed while generating this documentation:
 
 | Database | Project status | Verification |
 | --- | --- | --- |
-| **SQLite** | Default in `.env.example` and `phpunit.xml`. | `php -m | grep sqlite` |
-| **PostgreSQL** | Supported by `config/database.php` through `DB_CONNECTION=pgsql`. | `psql --version` |
+| **PostgreSQL** | Default database in `.env.example` and `config/database.php`, following PDS-UEPG. | `psql --version` |
+| **SQLite** | Used only for automated tests through `phpunit.xml`, when configured. | `php -m | grep sqlite` |
 | **MySQL/MariaDB/SQL Server** | Default Laravel connections kept in `config/database.php`. | Corresponding client |
 
-For quick development, SQLite is enough for routes and basic tests. For shared environments or production, use PostgreSQL or another supported relational database and keep migrations aligned with models.
+For new systems in the NTI/UEPG context, PostgreSQL is the project default database. SQLite remains only as an in-memory database for local automated tests.
 
 ### Relevant PHP Extensions
 
 | Extension | Reason |
 | --- | --- |
 | `pdo` | Database access through Laravel. |
-| `pdo_sqlite` | Required for local SQLite and in-memory tests. |
-| `pdo_pgsql` | Required if `DB_CONNECTION=pgsql`. |
+| `pdo_pgsql` | Required for the default PostgreSQL connection. |
+| `pdo_sqlite` | Required only for in-memory SQLite automated tests. |
 | `mbstring` | Common Laravel and Symfony dependency. |
 | `openssl` | Cryptography, keys, and secure operations. |
 | `fileinfo` | File validation and handling. |
@@ -99,7 +99,7 @@ For quick development, SQLite is enough for routes and basic tests. For shared e
 | --- | --- | --- |
 | `8000` | `php artisan serve` | Development |
 | `5173` | Vite dev server | Development |
-| `5432` | PostgreSQL, when used | Development/production |
+| `5432` | PostgreSQL | Development/production |
 | `80` | HTTP through Nginx/Apache | Production |
 | `443` | HTTPS through Nginx/Apache | Production |
 
@@ -113,7 +113,7 @@ Before running the application:
 2. Install JS dependencies with npm.
 3. Copy `.env.example` to `.env`.
 4. Generate `APP_KEY`.
-5. Configure `DB_CONNECTION` and database credentials.
+5. Configure PostgreSQL credentials.
 6. Run migrations.
 
 For automated tests, `phpunit.xml` already defines in-memory SQLite:
